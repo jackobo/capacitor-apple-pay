@@ -13,7 +13,6 @@ npx cap sync
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
 * [`canMakePayments()`](#canmakepayments)
 * [`addListener('validateMerchant', ...)`](#addlistenervalidatemerchant-)
 * [`addListener('authorizePayment', ...)`](#addlistenerauthorizepayment-)
@@ -31,28 +30,13 @@ npx cap sync
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-### echo(...)
-
-```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
-```
-
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
-
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
-
---------------------
-
-
 ### canMakePayments()
 
 ```typescript
-canMakePayments() => Promise<boolean>
+canMakePayments() => Promise<CanMakePaymentsResult>
 ```
 
-**Returns:** <code>Promise&lt;boolean&gt;</code>
+**Returns:** <code>Promise&lt;<a href="#canmakepaymentsresult">CanMakePaymentsResult</a>&gt;</code>
 
 --------------------
 
@@ -161,6 +145,13 @@ removeAllListeners() => Promise<void>
 ### Interfaces
 
 
+#### CanMakePaymentsResult
+
+| Prop                  | Type                 |
+| --------------------- | -------------------- |
+| **`canMakePayments`** | <code>boolean</code> |
+
+
 #### PluginListenerHandle
 
 | Prop         | Type                                      |
@@ -177,28 +168,22 @@ removeAllListeners() => Promise<void>
 
 #### AuthorizePaymentEvent
 
-| Prop          | Type                |
-| ------------- | ------------------- |
-| **`payment`** | <code>string</code> |
+| Prop              | Type                                                                 |
+| ----------------- | -------------------------------------------------------------------- |
+| **`paymentInfo`** | <code>{ transactionIdentifier: string; paymentData: string; }</code> |
 
 
 #### PaymentRequest
 
-| Prop                       | Type                                                                |
-| -------------------------- | ------------------------------------------------------------------- |
-| **`countryCode`**          | <code>string</code>                                                 |
-| **`currencyCode`**         | <code>string</code>                                                 |
-| **`supportedNetworks`**    | <code>string[]</code>                                               |
-| **`merchantCapabilities`** | <code>string[]</code>                                               |
-| **`total`**                | <code><a href="#paymentrequesttotal">PaymentRequestTotal</a></code> |
-
-
-#### PaymentRequestTotal
-
-| Prop         | Type                |
-| ------------ | ------------------- |
-| **`label`**  | <code>string</code> |
-| **`amount`** | <code>string</code> |
+| Prop                       | Type                              |
+| -------------------------- | --------------------------------- |
+| **`merchantId`**           | <code>string</code>               |
+| **`countryCode`**          | <code>string</code>               |
+| **`currencyCode`**         | <code>string</code>               |
+| **`supportedNetworks`**    | <code>SupportedNetworks[]</code>  |
+| **`merchantCapabilities`** | <code>MerchantCapability[]</code> |
+| **`totalLabel`**           | <code>string</code>               |
+| **`totalAmount`**          | <code>string</code>               |
 
 
 #### CompleteMerchantValidationRequest
@@ -224,5 +209,15 @@ removeAllListeners() => Promise<void>
 #### CancelPaymentEventHandler
 
 <code>(): void</code>
+
+
+#### SupportedNetworks
+
+<code>'visa' | 'masterCard' | 'amex'</code>
+
+
+#### MerchantCapability
+
+<code>'supports3DS' | 'supportsCredit' | 'supportsDebit' | 'supportsEMV'</code>
 
 </docgen-api>

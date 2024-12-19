@@ -12,10 +12,6 @@ import type {
 
 
 export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePayPlugin {
-  async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
-    return options;
-  }
 
   async canMakePayments(): Promise<CanMakePaymentsResult> {
     if(!ApplePaySession) {
@@ -46,7 +42,11 @@ export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePay
 
     this._session.onpaymentauthorized = async (event) => {
       const authorizePaymentEvent: AuthorizePaymentEvent = {
-        payment: event.payment
+        paymentInfo: {
+          transactionIdentifier: event.payment.transactionIdentifier,
+          paymentData: event.payment.paymentData
+
+        }
       }
 
       this.notifyListeners('authorizePayment', authorizePaymentEvent);

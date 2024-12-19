@@ -4,18 +4,18 @@ export interface CanMakePaymentsResult {
   canMakePayments: boolean;
 }
 
-export interface PaymentRequestTotal {
-  label: string;
-  amount: string;
-}
+export type SupportedNetworks = 'visa' | 'masterCard' | 'amex';
 
+export type MerchantCapability = 'supports3DS' | 'supportsCredit' | 'supportsDebit' | 'supportsEMV';
 
 export interface PaymentRequest {
+  merchantId: string;
   countryCode: string;
   currencyCode: string;
-  supportedNetworks: string[];
-  merchantCapabilities: string[];
-  total: PaymentRequestTotal;
+  supportedNetworks: SupportedNetworks[];
+  merchantCapabilities: MerchantCapability[];
+  totalLabel: string;
+  totalAmount: string;
 }
 
 
@@ -26,7 +26,10 @@ export interface ValidateMerchantEvent {
 export type ValidateMerchantEventHandler = (event: ValidateMerchantEvent) => void;
 
 export interface AuthorizePaymentEvent {
-  payment: string;
+  paymentInfo: {
+    transactionIdentifier: string;
+    paymentData: string;
+  }
 }
 
 export type AuthorizePaymentEventHandler = (event: AuthorizePaymentEvent) => void;
@@ -40,7 +43,6 @@ export interface CompleteMerchantValidationRequest {
 
 
 export interface CapacitorApplePayPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
 
   canMakePayments(): Promise<CanMakePaymentsResult>;
 
