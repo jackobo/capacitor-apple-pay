@@ -4,7 +4,7 @@ export interface CanMakePaymentsResult {
   canMakePayments: boolean;
 }
 
-export type SupportedPaymentNetworks =
+export type PaymentNetwork =
     'amex' | 'bancomat' | 'bancontact'
     | 'cartesBancaires' | 'chinaUnionPay' | 'dankort'
     | 'discover' | 'eftpos' | 'electron'
@@ -20,7 +20,7 @@ export interface PaymentRequest {
   merchantId: string;
   countryCode: string;
   currencyCode: string;
-  supportedNetworks: SupportedPaymentNetworks[];
+  supportedNetworks: PaymentNetwork[];
   merchantCapabilities: MerchantCapability[];
   totalLabel: string;
   totalAmount: string;

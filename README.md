@@ -180,7 +180,7 @@ removeAllListeners() => Promise<void>
 | **`merchantId`**           | <code>string</code>               |
 | **`countryCode`**          | <code>string</code>               |
 | **`currencyCode`**         | <code>string</code>               |
-| **`supportedNetworks`**    | <code>SupportedNetworks[]</code>  |
+| **`supportedNetworks`**    | <code>PaymentNetwork[]</code>     |
 | **`merchantCapabilities`** | <code>MerchantCapability[]</code> |
 | **`totalLabel`**           | <code>string</code>               |
 | **`totalAmount`**          | <code>string</code>               |
@@ -211,9 +211,9 @@ removeAllListeners() => Promise<void>
 <code>(): void</code>
 
 
-#### SupportedNetworks
+#### PaymentNetwork
 
-<code>'visa' | 'masterCard' | 'amex'</code>
+<code>'amex' | 'bancomat' | 'bancontact' | 'cartesBancaires' | 'chinaUnionPay' | 'dankort' | 'discover' | 'eftpos' | 'electron' | 'elo' | 'girocard' | 'interac' | 'jcb' | 'mada' | 'maestro' | 'masterCard' | 'mir' | 'privateLabel' | 'visa' | 'vPay'</code>
 
 
 #### MerchantCapability
