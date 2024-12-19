@@ -5,12 +5,9 @@ export interface CanMakePaymentsResult {
 }
 
 export type PaymentNetwork =
-    'amex' | 'bancomat' | 'bancontact'
-    | 'cartesBancaires' | 'chinaUnionPay' | 'dankort'
-    | 'discover' | 'eftpos' | 'electron'
-    | 'elo' | 'girocard' | 'interac'
-    | 'jcb' | 'mada' | 'maestro'
-    | 'masterCard' | 'mir' | 'privateLabel'
+    'amex' | 'bancomat' | 'bancontact' | 'cartesBancaires' | 'chinaUnionPay' | 'dankort'
+    | 'discover' | 'eftpos' | 'electron' | 'elo' | 'girocard' | 'interac'
+    | 'jcb' | 'mada' | 'maestro' | 'masterCard' | 'mir' | 'privateLabel'
     | 'visa' | 'vPay';
 
 
