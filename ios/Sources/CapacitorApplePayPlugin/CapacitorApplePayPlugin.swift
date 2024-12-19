@@ -57,14 +57,19 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
             return
         }
                 
-        let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest)
-        paymentController?.delegate = self
-        if let viewController = self.bridge?.viewController {
-            viewController.present(paymentController ?? <#default value#>, animated: true, completion: nil)
-            call.resolve()
-        } else {
-            call.reject("Failed to get bridge.viewController")
+        guard let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else {
+            call.reject("Unable to create PKPaymentAuthorizationViewController");
+            return;
         }
+        paymentController.delegate = self
+        DispatchQueue.main.async { [weak self] in
+            if let viewController = self?.bridge?.viewController {
+                viewController.present(paymentController, animated: true, completion: nil)
+                call.resolve()
+            } else {
+                call.reject("Failed to get bridge.viewController")
+            }
+       }
         
     }
     
@@ -83,7 +88,15 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
     }
     
     private func getSupportedNetworks(_ supportedNetworks: [String]) -> [PKPaymentNetwork] {
-        return supportedNetworks.compactMap { PKPaymentNetwork(rawValue: $0) }
+        //return supportedNetworks.compactMap { PKPaymentNetwork(rawValue: $0) }
+        let supportedNetworks: [PKPaymentNetwork] = [
+            .visa,
+            .masterCard,
+            .amex,
+            .discover,
+            .JCB
+        ]
+        return supportedNetworks
     }
     
     private func getMerchantCapabilites(_ merchantCapabilities: [String]) -> PKMerchantCapability {
@@ -109,8 +122,9 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
     @objc func paymentAuthorizationSuccess(_ call: CAPPluginCall) {
         if let currentCompletionHandler = self.currentCompletionHandler {
             currentCompletionHandler(PKPaymentAuthorizationResult(status: .success, errors: nil))
+            
         }
-        
+        currentCompletionHandler = nil
         call.resolve()
     }
     
@@ -118,7 +132,7 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
         if let currentCompletionHandler = self.currentCompletionHandler {
             currentCompletionHandler(PKPaymentAuthorizationResult(status: .failure, errors: nil))
         }
-        
+        currentCompletionHandler = nil
         call.resolve()
     }
     

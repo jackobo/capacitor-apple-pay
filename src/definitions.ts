@@ -6,6 +6,39 @@ export interface CanMakePaymentsResult {
 
 export type SupportedNetworks = 'visa' | 'masterCard' | 'amex';
 
+/*
+AmEx,
+    Bancomat,
+    Bancontact,
+    PagoBancomat,
+    CarteBancaire,
+    CarteBancaires,
+    CartesBancaires,
+    ChinaUnionPay,
+    Dankort,
+    Discover,
+    Eftpos,
+    Electron,
+    Elo,
+    girocard,
+    Interac,
+    iD,
+    JCB,
+    mada,
+    Maestro,
+    MasterCard,
+    Meeza,
+    Mir,
+    NAPAS,
+    BankAxept,
+    PostFinanceAG,
+    PrivateLabel,
+    QUICPay,
+    Suica,
+    Visa,
+    VPay
+ */
+
 export type MerchantCapability = 'supports3DS' | 'supportsCredit' | 'supportsDebit' | 'supportsEMV';
 
 export interface PaymentRequest {
