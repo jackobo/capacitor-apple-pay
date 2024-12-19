@@ -25,9 +25,9 @@ export class CapacitorApplePayPluginWeb extends WebPlugin implements CapacitorAp
       const session = new ApplePaySession(version, request);
       session.onvalidatemerchant = async (event) => {
         try {
-          console.error('start merchant validation');
+
           const merchantValidationResult = await options.validateMerchant(event);
-          console.error('end merchant validation', merchantValidationResult);
+
           session.completeMerchantValidation(JSON.parse(merchantValidationResult.merchantSession));
         } catch (err) {
           reject(err);
