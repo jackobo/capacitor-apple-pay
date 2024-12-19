@@ -15,8 +15,16 @@ npx cap sync
 
 * [`echo(...)`](#echo)
 * [`canMakePayments()`](#canmakepayments)
-* [`makePayment(...)`](#makepayment)
+* [`addListener('validateMerchant', ...)`](#addlistenervalidatemerchant-)
+* [`addListener('authorizePayment', ...)`](#addlistenerauthorizepayment-)
+* [`addListener('cancel', ...)`](#addlistenercancel-)
+* [`startPayment(...)`](#startpayment)
+* [`completeMerchantValidation(...)`](#completemerchantvalidation)
+* [`paymentAuthorizationSuccess()`](#paymentauthorizationsuccess)
+* [`paymentAuthorizationFail()`](#paymentauthorizationfail)
+* [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
+* [Type Aliases](#type-aliases)
 
 </docgen-index>
 
@@ -49,19 +57,103 @@ canMakePayments() => Promise<boolean>
 --------------------
 
 
-### makePayment(...)
+### addListener('validateMerchant', ...)
 
 ```typescript
-makePayment<TAuthorizationResultData>(version: number, request: ApplePayPaymentRequest, options: IMakePaymentOptions<TAuthorizationResultData>) => Promise<TAuthorizationResultData>
+addListener(eventName: 'validateMerchant', handler: ValidateMerchantEventHandler) => Promise<PluginListenerHandle>
 ```
 
-| Param         | Type                                                                                                |
-| ------------- | --------------------------------------------------------------------------------------------------- |
-| **`version`** | <code>number</code>                                                                                 |
-| **`request`** | <code><a href="#applepaypaymentrequest">ApplePayPaymentRequest</a></code>                           |
-| **`options`** | <code><a href="#imakepaymentoptions">IMakePaymentOptions</a>&lt;TAuthorizationResultData&gt;</code> |
+| Param           | Type                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------- |
+| **`eventName`** | <code>'validateMerchant'</code>                                                       |
+| **`handler`**   | <code><a href="#validatemerchanteventhandler">ValidateMerchantEventHandler</a></code> |
 
-**Returns:** <code>Promise&lt;TAuthorizationResultData&gt;</code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
+### addListener('authorizePayment', ...)
+
+```typescript
+addListener(eventName: 'authorizePayment', handler: AuthorizePaymentEventHandler) => Promise<PluginListenerHandle>
+```
+
+| Param           | Type                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------- |
+| **`eventName`** | <code>'authorizePayment'</code>                                                       |
+| **`handler`**   | <code><a href="#authorizepaymenteventhandler">AuthorizePaymentEventHandler</a></code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
+### addListener('cancel', ...)
+
+```typescript
+addListener(eventName: 'cancel', handler: CancelPaymentEventHandler) => Promise<PluginListenerHandle>
+```
+
+| Param           | Type                                                                            |
+| --------------- | ------------------------------------------------------------------------------- |
+| **`eventName`** | <code>'cancel'</code>                                                           |
+| **`handler`**   | <code><a href="#cancelpaymenteventhandler">CancelPaymentEventHandler</a></code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
+### startPayment(...)
+
+```typescript
+startPayment(request: PaymentRequest) => Promise<void>
+```
+
+| Param         | Type                                                      |
+| ------------- | --------------------------------------------------------- |
+| **`request`** | <code><a href="#paymentrequest">PaymentRequest</a></code> |
+
+--------------------
+
+
+### completeMerchantValidation(...)
+
+```typescript
+completeMerchantValidation(request: CompleteMerchantValidationRequest) => Promise<void>
+```
+
+| Param         | Type                                                                                            |
+| ------------- | ----------------------------------------------------------------------------------------------- |
+| **`request`** | <code><a href="#completemerchantvalidationrequest">CompleteMerchantValidationRequest</a></code> |
+
+--------------------
+
+
+### paymentAuthorizationSuccess()
+
+```typescript
+paymentAuthorizationSuccess() => Promise<void>
+```
+
+--------------------
+
+
+### paymentAuthorizationFail()
+
+```typescript
+paymentAuthorizationFail() => Promise<void>
+```
+
+--------------------
+
+
+### removeAllListeners()
+
+```typescript
+removeAllListeners() => Promise<void>
+```
 
 --------------------
 
@@ -69,18 +161,39 @@ makePayment<TAuthorizationResultData>(version: number, request: ApplePayPaymentR
 ### Interfaces
 
 
-#### ApplePayPaymentRequest
+#### PluginListenerHandle
 
-| Prop                       | Type                                                                                |
-| -------------------------- | ----------------------------------------------------------------------------------- |
-| **`countryCode`**          | <code>string</code>                                                                 |
-| **`currencyCode`**         | <code>string</code>                                                                 |
-| **`supportedNetworks`**    | <code>string[]</code>                                                               |
-| **`merchantCapabilities`** | <code>string[]</code>                                                               |
-| **`total`**                | <code><a href="#applepaypaymentrequesttotal">ApplePayPaymentRequestTotal</a></code> |
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 
-#### ApplePayPaymentRequestTotal
+#### ValidateMerchantEvent
+
+| Prop                | Type                |
+| ------------------- | ------------------- |
+| **`validationURL`** | <code>string</code> |
+
+
+#### AuthorizePaymentEvent
+
+| Prop          | Type                |
+| ------------- | ------------------- |
+| **`payment`** | <code>string</code> |
+
+
+#### PaymentRequest
+
+| Prop                       | Type                                                                |
+| -------------------------- | ------------------------------------------------------------------- |
+| **`countryCode`**          | <code>string</code>                                                 |
+| **`currencyCode`**         | <code>string</code>                                                 |
+| **`supportedNetworks`**    | <code>string[]</code>                                               |
+| **`merchantCapabilities`** | <code>string[]</code>                                               |
+| **`total`**                | <code><a href="#paymentrequesttotal">PaymentRequestTotal</a></code> |
+
+
+#### PaymentRequestTotal
 
 | Prop         | Type                |
 | ------------ | ------------------- |
@@ -88,40 +201,28 @@ makePayment<TAuthorizationResultData>(version: number, request: ApplePayPaymentR
 | **`amount`** | <code>string</code> |
 
 
-#### IMakePaymentOptions
-
-| Prop                           | Type                                                                                                                                                                                                                             |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`validateMerchant`**         | <code>(event: <a href="#applepayvalidatemerchantevent">ApplePayValidateMerchantEvent</a>) =&gt; Promise&lt;<a href="#applepayvalidatemerchantresult">ApplePayValidateMerchantResult</a>&gt;</code>                               |
-| **`merchantAuthorizePayment`** | <code>(event: <a href="#applepaypaymentauthorizedevent">ApplePayPaymentAuthorizedEvent</a>) =&gt; Promise&lt;<a href="#imerchantauthorizationresult">IMerchantAuthorizationResult</a>&lt;TAuthorizationResultData&gt;&gt;</code> |
-
-
-#### ApplePayValidateMerchantEvent
-
-| Prop                | Type                |
-| ------------------- | ------------------- |
-| **`validationURL`** | <code>string</code> |
-
-
-#### ApplePayValidateMerchantResult
+#### CompleteMerchantValidationRequest
 
 | Prop                  | Type                |
 | --------------------- | ------------------- |
 | **`merchantSession`** | <code>string</code> |
 
 
-#### ApplePayPaymentAuthorizedEvent
-
-| Prop          | Type             |
-| ------------- | ---------------- |
-| **`payment`** | <code>any</code> |
+### Type Aliases
 
 
-#### IMerchantAuthorizationResult
+#### ValidateMerchantEventHandler
 
-| Prop                      | Type                                  |
-| ------------------------- | ------------------------------------- |
-| **`isSuccess`**           | <code>boolean</code>                  |
-| **`authorizationResult`** | <code>TAuthorizationResultData</code> |
+<code>(event: <a href="#validatemerchantevent">ValidateMerchantEvent</a>): void</code>
+
+
+#### AuthorizePaymentEventHandler
+
+<code>(event: <a href="#authorizepaymentevent">AuthorizePaymentEvent</a>): void</code>
+
+
+#### CancelPaymentEventHandler
+
+<code>(): void</code>
 
 </docgen-api>

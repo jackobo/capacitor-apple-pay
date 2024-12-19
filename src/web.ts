@@ -1,6 +1,13 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type {IMakePaymentOptions, ApplePayPaymentRequest, CapacitorApplePayPlugin} from "./definitions";
+import type {ApplePaySessionObject} from "./apple-pay";
+import type {
+  CapacitorApplePayPlugin,
+  AuthorizePaymentEvent,
+  CompleteMerchantValidationRequest, PaymentRequest,
+  ValidateMerchantEvent
+} from "./definitions";
+
 
 export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePayPlugin {
   async echo(options: { value: string }): Promise<{ value: string }> {
@@ -16,43 +23,56 @@ export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePay
     return await ApplePaySession.canMakePayments();
   }
 
-  async makePayment<TAuthorizationResult>(version: number, request: ApplePayPaymentRequest, options: IMakePaymentOptions<TAuthorizationResult>): Promise<TAuthorizationResult> {
+  private _session: ApplePaySessionObject | null = null;
+  async startPayment(request: PaymentRequest): Promise<void> {
     if(!await this.canMakePayments()) {
       throw new Error(`Can't make payments with Apple Pay`);
     }
 
-    return new Promise<TAuthorizationResult>((resolve, reject) => {
-      const session = new ApplePaySession(version, request);
-      session.onvalidatemerchant = async (event) => {
-        try {
+    this._session = new ApplePaySession(1, request);
 
-          const merchantValidationResult = await options.validateMerchant(event);
-
-          session.completeMerchantValidation(JSON.parse(merchantValidationResult.merchantSession));
-        } catch (err) {
-          reject(err);
+    this._session.onvalidatemerchant = async (event) => {
+        const validateMerchantEvent: ValidateMerchantEvent = {
+          validationURL: event.validationURL
         }
+        this.notifyListeners('validateMerchant', validateMerchantEvent);
+    }
+
+    this._session.onpaymentauthorized = async (event) => {
+      const authorizePaymentEvent: AuthorizePaymentEvent = {
+        payment: event.payment
       }
 
-      session.onpaymentauthorized = async (event) => {
-        try {
-          const authorizationResult = await options.merchantAuthorizePayment(event);
-          if(authorizationResult.isSuccess) {
-            session.completePayment(ApplePaySession.STATUS_SUCCESS);
-          } else {
-            session.completePayment(ApplePaySession.STATUS_FAILURE);
-          }
-          resolve(authorizationResult.authorizationResult);
-        } catch (err) {
-          session.completePayment(ApplePaySession.STATUS_FAILURE);
-          reject(err);
-        }
+      this.notifyListeners('authorizePayment', authorizePaymentEvent);
+    }
 
-      }
+    this._session.oncancel = () => {
+      this.notifyListeners('cancel', undefined);
+    }
 
-      session.begin();
-
-    });
-
+    this._session.begin();
   }
+
+  async completeMerchantValidation(request: CompleteMerchantValidationRequest): Promise<void> {
+    if(!this._session) {
+      throw new Error('ApplePay session not initialized ');
+    }
+
+    this._session.completeMerchantValidation(JSON.parse(request.merchantSession));
+  }
+  async paymentAuthorizationSuccess(): Promise<void> {
+    if(!this._session) {
+      throw new Error('ApplePay session not initialized ');
+    }
+    this._session.completePayment(ApplePaySession.STATUS_SUCCESS);
+    this._session = null;
+  }
+  async paymentAuthorizationFail(): Promise<void> {
+    if(!this._session) {
+      throw new Error('ApplePay session not initialized ');
+    }
+    this._session.completePayment(ApplePaySession.STATUS_FAILURE);
+    this._session = null;
+  }
+
 }
