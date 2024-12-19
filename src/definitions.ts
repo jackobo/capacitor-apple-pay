@@ -36,7 +36,7 @@ export interface IMakePaymentOptions<TAuthorizationResultData> {
   merchantAuthorizePayment: (event: ApplePayPaymentAuthorizedEvent) => Promise<IMerchantAuthorizationResult<TAuthorizationResultData>>;
 }
 
-export interface CapacitorApplePayPluginPlugin {
+export interface CapacitorApplePayPlugin {
   echo(options: { value: string }): Promise<{ value: string }>;
   canMakePayments(): Promise<boolean>;
   makePayment<TAuthorizationResultData>(version: number, request: ApplePayPaymentRequest, options: IMakePaymentOptions<TAuthorizationResultData>): Promise<TAuthorizationResultData>;

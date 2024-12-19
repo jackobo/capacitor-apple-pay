@@ -1,11 +1,22 @@
 package com.jackobo.capacitor.plugins.applepay;
 
-import android.util.Log;
+import com.getcapacitor.JSObject;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginMethod;
+import com.getcapacitor.annotation.CapacitorPlugin;
 
-public class CapacitorApplePayPlugin {
+@CapacitorPlugin(name = "CapacitorApplePay")
+public class CapacitorApplePayPlugin extends Plugin {
 
-    public String echo(String value) {
-        Log.i("Echo", value);
-        return value;
+    private CapacitorApplePay implementation = new CapacitorApplePay();
+
+    @PluginMethod
+    public void echo(PluginCall call) {
+        String value = call.getString("value");
+
+        JSObject ret = new JSObject();
+        ret.put("value", implementation.echo(value));
+        call.resolve(ret);
     }
 }

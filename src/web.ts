@@ -1,8 +1,8 @@
-import {WebPlugin} from '@capacitor/core';
+import { WebPlugin } from '@capacitor/core';
 
-import type {IMakePaymentOptions, ApplePayPaymentRequest, CapacitorApplePayPluginPlugin} from "./definitions";
+import type {IMakePaymentOptions, ApplePayPaymentRequest, CapacitorApplePayPlugin} from "./definitions";
 
-export class CapacitorApplePayPluginWeb extends WebPlugin implements CapacitorApplePayPluginPlugin {
+export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePayPlugin {
   async echo(options: { value: string }): Promise<{ value: string }> {
     console.log('ECHO', options);
     return options;
@@ -10,7 +10,7 @@ export class CapacitorApplePayPluginWeb extends WebPlugin implements CapacitorAp
 
   async canMakePayments(): Promise<boolean> {
     if(!ApplePaySession) {
-        return false;
+      return false;
     }
 
     return await ApplePaySession.canMakePayments();

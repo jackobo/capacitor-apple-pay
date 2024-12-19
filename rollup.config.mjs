@@ -4,7 +4,7 @@ export default {
     {
       file: 'dist/plugin.js',
       format: 'iife',
-      name: 'capacitorCapacitorApplePayPlugin',
+      name: 'capacitorCapacitorApplePay',
       globals: {
         '@capacitor/core': 'capacitorExports',
       },

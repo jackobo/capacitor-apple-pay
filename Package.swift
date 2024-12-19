@@ -7,22 +7,22 @@ let package = Package(
     products: [
         .library(
             name: "JackoboCapacitorApplePay",
-            targets: ["CapacitorApplePayPluginPlugin"])
+            targets: ["CapacitorApplePayPlugin"])
     ],
     dependencies: [
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", branch: "main")
     ],
     targets: [
         .target(
-            name: "CapacitorApplePayPluginPlugin",
+            name: "CapacitorApplePayPlugin",
             dependencies: [
                 .product(name: "Capacitor", package: "capacitor-swift-pm"),
                 .product(name: "Cordova", package: "capacitor-swift-pm")
             ],
-            path: "ios/Sources/CapacitorApplePayPluginPlugin"),
+            path: "ios/Sources/CapacitorApplePayPlugin"),
         .testTarget(
-            name: "CapacitorApplePayPluginPluginTests",
-            dependencies: ["CapacitorApplePayPluginPlugin"],
-            path: "ios/Tests/CapacitorApplePayPluginPluginTests")
+            name: "CapacitorApplePayPluginTests",
+            dependencies: ["CapacitorApplePayPlugin"],
+            path: "ios/Tests/CapacitorApplePayPluginTests")
     ]
 )
