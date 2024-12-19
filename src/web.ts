@@ -5,8 +5,10 @@ import type {
   CapacitorApplePayPlugin,
   AuthorizePaymentEvent,
   CompleteMerchantValidationRequest, PaymentRequest,
-  ValidateMerchantEvent
+  ValidateMerchantEvent,
+  CanMakePaymentsResult
 } from "./definitions";
+
 
 
 export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePayPlugin {
@@ -15,12 +17,16 @@ export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePay
     return options;
   }
 
-  async canMakePayments(): Promise<boolean> {
+  async canMakePayments(): Promise<CanMakePaymentsResult> {
     if(!ApplePaySession) {
-      return false;
+      return {
+        canMakePayments: false
+      };
     }
 
-    return await ApplePaySession.canMakePayments();
+    return {
+      canMakePayments: await ApplePaySession.canMakePayments()
+    };
   }
 
   private _session: ApplePaySessionObject | null = null;

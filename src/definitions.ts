@@ -1,5 +1,9 @@
 import type {PluginListenerHandle} from "@capacitor/core";
 
+export interface CanMakePaymentsResult {
+  canMakePayments: boolean;
+}
+
 export interface PaymentRequestTotal {
   label: string;
   amount: string;
@@ -38,7 +42,7 @@ export interface CompleteMerchantValidationRequest {
 export interface CapacitorApplePayPlugin {
   echo(options: { value: string }): Promise<{ value: string }>;
 
-  canMakePayments(): Promise<boolean>;
+  canMakePayments(): Promise<CanMakePaymentsResult>;
 
   addListener(eventName: 'validateMerchant', handler: ValidateMerchantEventHandler): Promise<PluginListenerHandle>;
   addListener(eventName: 'authorizePayment', handler: AuthorizePaymentEventHandler): Promise<PluginListenerHandle>;
