@@ -4,40 +4,15 @@ export interface CanMakePaymentsResult {
   canMakePayments: boolean;
 }
 
-export type SupportedNetworks = 'visa' | 'masterCard' | 'amex';
+export type SupportedPaymentNetworks =
+    'amex' | 'bancomat' | 'bancontact'
+    | 'cartesBancaires' | 'chinaUnionPay' | 'dankort'
+    | 'discover' | 'eftpos' | 'electron'
+    | 'elo' | 'girocard' | 'interac'
+    | 'jcb' | 'mada' | 'maestro'
+    | 'masterCard' | 'mir' | 'privateLabel'
+    | 'visa' | 'vPay';
 
-/*
-AmEx,
-    Bancomat,
-    Bancontact,
-    PagoBancomat,
-    CarteBancaire,
-    CarteBancaires,
-    CartesBancaires,
-    ChinaUnionPay,
-    Dankort,
-    Discover,
-    Eftpos,
-    Electron,
-    Elo,
-    girocard,
-    Interac,
-    iD,
-    JCB,
-    mada,
-    Maestro,
-    MasterCard,
-    Meeza,
-    Mir,
-    NAPAS,
-    BankAxept,
-    PostFinanceAG,
-    PrivateLabel,
-    QUICPay,
-    Suica,
-    Visa,
-    VPay
- */
 
 export type MerchantCapability = 'supports3DS' | 'supportsCredit' | 'supportsDebit' | 'supportsEMV';
 
@@ -45,7 +20,7 @@ export interface PaymentRequest {
   merchantId: string;
   countryCode: string;
   currencyCode: string;
-  supportedNetworks: SupportedNetworks[];
+  supportedNetworks: SupportedPaymentNetworks[];
   merchantCapabilities: MerchantCapability[];
   totalLabel: string;
   totalAmount: string;

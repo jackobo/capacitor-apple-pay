@@ -19,7 +19,7 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
     ]
     
     private var currentCompletionHandler: ((PKPaymentAuthorizationResult) -> Void)?
-
+    
     
     
     @objc func canMakePayments(_ call: CAPPluginCall) {
@@ -53,14 +53,15 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
             supportedNetworks: supportedNetworks,
             merchantCapabilities: merchantCapabilities
         ) else {
-            call.reject("Unable to create a payment request")
+            call.reject("Invalid Apple Pay payment request parameters")
             return
         }
-                
+        
         guard let paymentController = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) else {
             call.reject("Unable to create PKPaymentAuthorizationViewController");
             return;
         }
+        
         paymentController.delegate = self
         DispatchQueue.main.async { [weak self] in
             if let viewController = self?.bridge?.viewController {
@@ -69,55 +70,27 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
             } else {
                 call.reject("Failed to get bridge.viewController")
             }
-       }
+        }
         
     }
     
     private func createPaymentRequest(itemLabel: String, itemAmount: String, merchantId: String, countryCode: String, currencyCode: String, supportedNetworks: [String], merchantCapabilities: [String]) -> PKPaymentRequest? {
         let request = PKPaymentRequest()
         request.merchantIdentifier = merchantId
-        request.supportedNetworks = getSupportedNetworks(supportedNetworks)
-        request.merchantCapabilities = getMerchantCapabilites(merchantCapabilities)
+        request.supportedNetworks = supportedPaymentNetworks(for: supportedNetworks)
+        request.merchantCapabilities = merchantCapabilites(for: merchantCapabilities)
         request.countryCode = countryCode
         request.currencyCode = currencyCode
-
+        
         let item = PKPaymentSummaryItem(label: itemLabel, amount: NSDecimalNumber(string: itemAmount))
         request.paymentSummaryItems = [item]
-
+        
         return request
     }
     
-    private func getSupportedNetworks(_ supportedNetworks: [String]) -> [PKPaymentNetwork] {
-        //return supportedNetworks.compactMap { PKPaymentNetwork(rawValue: $0) }
-        let supportedNetworks: [PKPaymentNetwork] = [
-            .visa,
-            .masterCard,
-            .amex,
-            .discover,
-            .JCB
-        ]
-        return supportedNetworks
-    }
     
-    private func getMerchantCapabilites(_ merchantCapabilities: [String]) -> PKMerchantCapability {
-        // Convert strings to PKMerchantCapability
-        var capabilities: PKMerchantCapability = []
-        for capability in merchantCapabilities {
-            switch capability {
-                case "supports3DS":
-                capabilities.insert(.capability3DS)
-                case "supportsCredit":
-                capabilities.insert(.capabilityCredit)
-                case "supportsDebit":
-                    capabilities.insert(.capabilityDebit)
-                case "supportsEMV":
-                    capabilities.insert(.capabilityEMV)
-                default:
-                    break
-            }
-        }
-        return capabilities;
-    }
+    
+    
     
     @objc func paymentAuthorizationSuccess(_ call: CAPPluginCall) {
         if let currentCompletionHandler = self.currentCompletionHandler {
@@ -136,7 +109,92 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
         call.resolve()
     }
     
+    private func merchantCapabilites(for merchantCapabilities: [String]) -> PKMerchantCapability {
+        
+        var capabilities: PKMerchantCapability = []
+        for capability in merchantCapabilities {
+            switch capability {
+            case "supports3DS":
+                capabilities.insert(.capability3DS)
+            case "supportsCredit":
+                capabilities.insert(.capabilityCredit)
+            case "supportsDebit":
+                capabilities.insert(.capabilityDebit)
+            case "supportsEMV":
+                capabilities.insert(.capabilityEMV)
+            default:
+                break
+            }
+        }
+        return capabilities;
+    }
+    
+    
+    private func supportedPaymentNetworks(for networks: [String]) -> [PKPaymentNetwork] {
+        var availableNetworks: [PKPaymentNetwork] = []
+        
+        for network in networks {
+            switch network {
+            case "amex":
+                availableNetworks.append(.amex)
+            case "bancomat":
+                if #available(iOS 16.0, *) {
+                    availableNetworks.append(.bancomat)
+                }
+            case "bancontact":
+                if #available(iOS 16.0, *) {
+                    availableNetworks.append(.bancontact)
+                }
+            case "cartesBancaires":
+                availableNetworks.append(.cartesBancaires)
+            case "chinaUnionPay":
+                availableNetworks.append(.chinaUnionPay)
+            case "dankort":
+                if #available(iOS 15.1, *) {
+                    availableNetworks.append(.dankort)
+                }
+            case "discover":
+                availableNetworks.append(.discover)
+            case "eftpos":
+                availableNetworks.append(.eftpos)
+            case "electron":
+                availableNetworks.append(.electron)
+            case "elo":
+                availableNetworks.append(.elo)
+            case "girocard":
+                if #available(iOS 14.0, *) {
+                    availableNetworks.append(.girocard)
+                }
+            case "interac":
+                availableNetworks.append(.interac)
+            case "jcb":
+                availableNetworks.append(.JCB)
+            case "mada":
+                availableNetworks.append(.mada)
+            case "maestro":
+                availableNetworks.append(.maestro)
+            case "masterCard":
+                availableNetworks.append(.masterCard)
+            case "mir":
+                if #available(iOS 14.5, *) {
+                    availableNetworks.append(.mir)
+                }
+            case "privateLabel":
+                availableNetworks.append(.privateLabel)
+            case "visa":
+                availableNetworks.append(.visa)
+            case "vPay":
+                availableNetworks.append(.vPay)
+            default:
+                break // Ignore unsupported networks
+            }
+        }
+        
+        return availableNetworks
+    }
 }
+    
+   
 
 extension CapacitorApplePayPlugin: PKPaymentAuthorizationViewControllerDelegate {
     
