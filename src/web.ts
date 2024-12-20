@@ -14,7 +14,7 @@ import type {
 export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePayPlugin {
 
   async canMakePayments(): Promise<CanMakePaymentsResult> {
-    if(!ApplePaySession) {
+    if(!(window as any).ApplePaySession) {
       return {
         canMakePayments: false
       };
