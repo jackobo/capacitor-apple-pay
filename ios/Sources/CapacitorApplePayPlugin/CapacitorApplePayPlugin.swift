@@ -205,22 +205,44 @@ extension CapacitorApplePayPlugin: PKPaymentAuthorizationViewControllerDelegate 
     }
     
     @objc public func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
-        let paymentToken = payment.token
-        let transactionIdentifier = paymentToken.transactionIdentifier
-        let paymentData = paymentToken.paymentData
-
-        // Convert payment data to JSON or a format that can be easily handled by JavaScript
-        let paymentInfo = [
-            "transactionIdentifier": transactionIdentifier,
-            "paymentData": paymentData.base64EncodedString() // Convert payment data to a Base64 string
-        ]
-
-        // Use a unique identifier to identify the JS callback
-        let callId = UUID().uuidString // Generate a unique ID for tracking the call
+        // Extracting data from the PKPayment object
+        
+        do {
+            let tokenPaymentData = try JSONSerialization.jsonObject(
+                with: payment.token.paymentData,
+                options: .mutableContainers
+            )
             
-        currentCompletionHandler = completion;
-        // Send payment information back to JavaScript
-        notifyListeners("authorizePayment", data: ["callId": callId, "paymentInfo": paymentInfo])
+            let tokenPaymentMethod: [String: Any] = [
+                "displayName": payment.token.paymentMethod.displayName,
+                "network": payment.token.paymentMethod.network?.rawValue,
+                "type": payment.token.paymentMethod.type.rawValue
+            ]
+            
+            
+            let tokenTransactionIdentifier = payment.token.transactionIdentifier;
+            
+            let tokenData = [
+                "paymentData": tokenPaymentData,
+                "paymentMethod": tokenPaymentMethod,
+                "transactionIdentifier": tokenTransactionIdentifier
+            ]
+            
+            let paymentData = [
+                "token": tokenData
+            ]
+            
+            self.currentCompletionHandler = completion
+            
+            notifyListeners("authorizePayment", data: ["paymentData": paymentData])
+        } catch {
+            print("Error notify authorizePayment: \(error)")
+            self.currentCompletionHandler = completion
+        }
+        
+    
+        
+       
     }
     
     //func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didRequestMerchantSessionUpdate handler: @escaping (PKPaymentRequestMerchantSessionUpdate) -> Void)

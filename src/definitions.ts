@@ -31,10 +31,7 @@ export interface ValidateMerchantEvent {
 export type ValidateMerchantEventHandler = (event: ValidateMerchantEvent) => void;
 
 export interface AuthorizePaymentEvent {
-  paymentInfo: {
-    transactionIdentifier: string;
-    paymentData: string;
-  }
+  paymentData: any;
 }
 
 export type AuthorizePaymentEventHandler = (event: AuthorizePaymentEvent) => void;

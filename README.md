@@ -168,9 +168,9 @@ removeAllListeners() => Promise<void>
 
 #### AuthorizePaymentEvent
 
-| Prop              | Type                                                                 |
-| ----------------- | -------------------------------------------------------------------- |
-| **`paymentInfo`** | <code>{ transactionIdentifier: string; paymentData: string; }</code> |
+| Prop              | Type             |
+| ----------------- | ---------------- |
+| **`paymentData`** | <code>any</code> |
 
 
 #### PaymentRequest
