@@ -4,10 +4,17 @@ export interface ApplePayPaymentAuthorizedEvent {
     payment: any
 }
 
+export interface ApplePayPaymentRequest extends Omit<PaymentRequest, 'totalLabel' | 'totalAmount' | 'merchantId'> {
+    total: {
+        label: string;
+        amount: string;
+    }
+}
+
 export interface ApplePaySessionObject {
 
     // eslint-disable-next-line @typescript-eslint/no-misused-new
-    new(version: number, paymentRequest: PaymentRequest): ApplePaySessionObject;
+    new(version: number, paymentRequest: ApplePayPaymentRequest): ApplePaySessionObject;
 
     canMakePayments(): Promise<boolean>;
     begin(): void;

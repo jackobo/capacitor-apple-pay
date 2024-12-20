@@ -31,7 +31,16 @@ export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePay
       throw new Error(`Can't make payments with Apple Pay`);
     }
 
-    this._session = new ApplePaySession(1, request);
+    this._session = new ApplePaySession(1, {
+      countryCode: request.countryCode,
+      currencyCode: request.currencyCode,
+      merchantCapabilities: request.merchantCapabilities,
+      supportedNetworks: request.supportedNetworks,
+      total: {
+        label: request.totalLabel,
+        amount: request.totalAmount
+      }
+    });
 
     this._session.onvalidatemerchant = async (event) => {
         const validateMerchantEvent: ValidateMerchantEvent = {
