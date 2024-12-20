@@ -234,7 +234,7 @@ extension CapacitorApplePayPlugin: PKPaymentAuthorizationViewControllerDelegate 
             
             self.currentCompletionHandler = completion
             
-            notifyListeners("authorizePayment", data: ["paymentData": paymentData])
+            notifyListeners("authorizePayment", data: ["payment": paymentData])
         } catch {
             print("Error notify authorizePayment: \(error)")
             self.currentCompletionHandler = completion
