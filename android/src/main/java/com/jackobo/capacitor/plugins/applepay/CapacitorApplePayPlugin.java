@@ -11,12 +11,32 @@ public class CapacitorApplePayPlugin extends Plugin {
 
     private CapacitorApplePay implementation = new CapacitorApplePay();
 
-    @PluginMethod
-    public void echo(PluginCall call) {
-        String value = call.getString("value");
 
+    @PluginMethod
+    public void canMakePayments(PluginCall call) {
         JSObject ret = new JSObject();
-        ret.put("value", implementation.echo(value));
+        ret.put("canMakePayments", false);
         call.resolve(ret);
     }
+
+    @PluginMethod
+    public void startPayment(PluginCall call) {
+        call.unavailable();
+    }
+
+    @PluginMethod
+    public void completeMerchantValidation(PluginCall call) {
+        call.unavailable();
+    }
+
+    @PluginMethod
+    public void paymentAuthorizationSuccess(PluginCall call) {
+        call.unavailable();
+    }
+
+    @PluginMethod
+    public void paymentAuthorizationFail(PluginCall call) {
+        call.unavailable();
+    }
+
 }
