@@ -51,7 +51,7 @@ export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePay
 
     this._session.onpaymentauthorized = async (event) => {
       const authorizePaymentEvent: AuthorizePaymentEvent = {
-        paymentData: event.payment.paymentData
+        payment: event.payment
       }
 
       this.notifyListeners('authorizePayment', authorizePaymentEvent);
