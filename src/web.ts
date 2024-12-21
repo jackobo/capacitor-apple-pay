@@ -36,10 +36,7 @@ export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePay
       currencyCode: request.currencyCode,
       merchantCapabilities: request.merchantCapabilities,
       supportedNetworks: request.supportedNetworks,
-      total: {
-        label: request.totalLabel,
-        amount: request.totalAmount
-      }
+      total: request.total
     });
 
     this._session.onvalidatemerchant = async (event) => {

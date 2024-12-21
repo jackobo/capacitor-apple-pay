@@ -4,12 +4,7 @@ export interface ApplePayPaymentAuthorizedEvent {
     payment: any
 }
 
-export interface ApplePayPaymentRequest extends Omit<PaymentRequest, 'totalLabel' | 'totalAmount' | 'merchantId'> {
-    total: {
-        label: string;
-        amount: string;
-    }
-}
+export type ApplePayPaymentRequest = Omit<PaymentRequest, 'merchantId'>;
 
 export interface ApplePaySessionObject {
 
