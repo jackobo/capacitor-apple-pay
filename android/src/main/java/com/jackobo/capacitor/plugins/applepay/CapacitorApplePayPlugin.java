@@ -8,10 +8,6 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 
 @CapacitorPlugin(name = "CapacitorApplePay")
 public class CapacitorApplePayPlugin extends Plugin {
-
-    private CapacitorApplePay implementation = new CapacitorApplePay();
-
-
     @PluginMethod
     public void canMakePayments(PluginCall call) {
         JSObject ret = new JSObject();
