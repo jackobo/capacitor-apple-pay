@@ -37,11 +37,17 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
               let currencyCode = call.getString("currencyCode"),
               let supportedNetworks = call.getArray("supportedNetworks") as? [String],
               let merchantCapabilities = call.getArray("merchantCapabilities") as? [String],
-              let totalLabel = call.getString("totalLabel"),
-              let totalAmount = call.getString("totalAmount")
+              let total = call.getObject("total")
         else {
             call.reject("Invalid parameters")
             return
+        }
+        
+        guard let totalAmount = total["amount"] as? String,
+              let totalLabel = total["label"] as? String
+        else {
+            call.reject("Missing total label or total amount")
+            return;
         }
         
         guard let paymentRequest = createPaymentRequest(
