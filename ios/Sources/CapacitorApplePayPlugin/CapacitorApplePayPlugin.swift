@@ -80,15 +80,21 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
         
     }
     
-    private func createPaymentRequest(itemLabel: String, itemAmount: String, merchantId: String, countryCode: String, currencyCode: String, supportedNetworks: [String], merchantCapabilities: [String]) -> PKPaymentRequest? {
+    private func createPaymentRequest(itemLabel: String, itemAmount: String, itemType?: String, merchantId: String, countryCode: String, currencyCode: String, supportedNetworks: [String], merchantCapabilities: [String]) -> PKPaymentRequest? {
         let request = PKPaymentRequest()
         request.merchantIdentifier = merchantId
         request.supportedNetworks = supportedPaymentNetworks(for: supportedNetworks)
-        request.merchantCapabilities = merchantCapabilites(for: merchantCapabilities)
+        request.merchantCapabilities = merchantCapabilities(for: merchantCapabilities)
         request.countryCode = countryCode
         request.currencyCode = currencyCode
-        
-        let item = PKPaymentSummaryItem(label: itemLabel, amount: NSDecimalNumber(string: itemAmount))
+
+        PKPaymentSummaryItemType summaryItemType = .final;
+
+        if(itemType == "pending") {
+            summaryItemType = .pending
+        }
+
+        let item = PKPaymentSummaryItem(label: itemLabel, amount: NSDecimalNumber(string: itemAmount), type: summaryItemType)
         request.paymentSummaryItems = [item]
         
         return request
@@ -115,7 +121,7 @@ public class CapacitorApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
         call.resolve()
     }
     
-    private func merchantCapabilites(for merchantCapabilities: [String]) -> PKMerchantCapability {
+    private func merchantCapabilities(for merchantCapabilities: [String]) -> PKMerchantCapability {
         
         var capabilities: PKMerchantCapability = []
         for capability in merchantCapabilities {

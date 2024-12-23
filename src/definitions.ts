@@ -26,8 +26,19 @@ export interface CanMakePaymentsResult {
 }
 
 export interface PaymentRequestTotal {
-    label: string;
-    amount: string;
+  /**
+   * The name that appears next to the amount. Usually this is your merchant name
+   */
+  label: string;
+  /**
+   * The amount formatted as string
+   * yourAmount.toFixed(2)
+   */
+  amount: string;
+  /**
+   * Defaults to final
+   */
+  type?: 'final' | 'pending'
 }
 
 /**
