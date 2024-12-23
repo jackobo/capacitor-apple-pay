@@ -36,7 +36,7 @@ export interface PaymentRequestTotal {
    */
   amount: string;
   /**
-   * Defaults to final
+   * Defaults to final if not provided
    */
   type?: 'final' | 'pending'
 }
