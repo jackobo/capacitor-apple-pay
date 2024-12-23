@@ -11,7 +11,7 @@ export interface ApplePaySessionObject {
     // eslint-disable-next-line @typescript-eslint/no-misused-new
     new(version: number, paymentRequest: ApplePayPaymentRequest): ApplePaySessionObject;
 
-    canMakePayments(): Promise<boolean>;
+    canMakePayments(): boolean;
     begin(): void;
     completeMerchantValidation(merchantSession: any): void;
     completePayment(status: number): void;

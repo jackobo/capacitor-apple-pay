@@ -21,7 +21,7 @@ export class CapacitorApplePayWeb extends WebPlugin implements CapacitorApplePay
     }
 
     return {
-      canMakePayments: await ApplePaySession.canMakePayments()
+      canMakePayments: ApplePaySession.canMakePayments()
     };
   }
 
