@@ -248,10 +248,11 @@ The payload for startPayment method
 
 #### PaymentRequestTotal
 
-| Prop         | Type                |
-| ------------ | ------------------- |
-| **`label`**  | <code>string</code> |
-| **`amount`** | <code>string</code> |
+| Prop         | Type                              | Description                                                                  |
+| ------------ | --------------------------------- | ---------------------------------------------------------------------------- |
+| **`label`**  | <code>string</code>               | The text that appears next to the amount. Usually this is your merchant name |
+| **`amount`** | <code>string</code>               | The amount formatted as string yourAmount.toFixed(2)                         |
+| **`type`**   | <code>'final' \| 'pending'</code> | Defaults to final if not specified                                           |
 
 
 #### CompleteMerchantValidationRequest
