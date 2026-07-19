@@ -248,11 +248,16 @@ extension CapacitorApplePayPlugin: PKPaymentAuthorizationViewControllerDelegate 
             ]
             
             self.currentCompletionHandler = completion
-            
+
             notifyListeners("authorizePayment", data: ["payment": paymentData])
         } catch {
             print("Error notify authorizePayment: \(error)")
-            self.currentCompletionHandler = completion
+            // Fail fast and explicitly instead of leaving the completion handler dangling:
+            // PassKit shows its own native failure animation immediately, and we tell JS
+            // why, instead of relying on an unrelated higher-level timeout.
+            notifyListeners("authorizePaymentError", data: ["message": error.localizedDescription])
+            completion(PKPaymentAuthorizationResult(status: .failure, errors: [error]))
+            self.currentCompletionHandler = nil
         }
         
     
